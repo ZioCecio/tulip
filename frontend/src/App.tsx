@@ -8,6 +8,7 @@ import { FlowList } from "./components/FlowList";
 import { FlowView } from "./pages/FlowView";
 import { DiffView } from "./pages/DiffView";
 import { Corrie } from "./components/Corrie";
+import { ProxyRules } from "./components/ProxyRules";
 
 function App() {
   return (
@@ -36,6 +37,14 @@ function App() {
             element={
               <Suspense>
                 <Corrie />
+              </Suspense>
+            }
+          />
+          <Route
+            path="proxy-rules/"
+            element={
+              <Suspense>
+                <ProxyRules />
               </Suspense>
             }
           />

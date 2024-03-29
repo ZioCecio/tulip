@@ -309,6 +309,11 @@ export function Header() {
           Graph view
         </div>
       </Link>
+      <Link to={`/proxy-rules`}>
+        <div className="bg-green-100 text-gray-800 rounded-md px-2 py-1">
+          Proxy rules
+        </div>
+      </Link>
       <div className="ml-auto mr-4" style={{ display: "flex" }}>
         <div className="mr-4">
           <FirstDiff />
