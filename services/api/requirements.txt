@@ -2,3 +2,5 @@ Flask_Cors
 pymongo
 Flask
 requests
+pyjwt
+pyjwt[crypto]

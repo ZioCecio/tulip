@@ -25,7 +25,7 @@
 import traceback
 from flask import Flask, Response, send_file
 
-from configurations import services, traffic_dir, start_date, tick_length
+from configurations import services, traffic_dir, start_date, tick_length, jwt_public_key
 from pathlib import Path
 from data2req import convert_flow_to_http_requests, convert_single_http_requests
 from base64 import b64decode
@@ -33,6 +33,9 @@ from db import DB
 from bson import json_util
 from flask_cors import CORS
 from flask import request
+
+import jwt
+import datetime
 
 from flow2pwn import flow2pwn
 
@@ -51,6 +54,28 @@ def return_text_response(object):
 @application.route('/')
 def hello_world():
     return 'Hello, World!'
+
+@application.route('/verify_token', methods=['POST'])
+def verify_token():
+    json = request.get_json()
+    if 'json' not in json:
+        return return_json_response({'status': 400, 'message': 'Token not specified'}), 400
+
+    try:
+        decoded = jwt.decode(json['json'], jwt_public_key, 'EdDSA', verify=True)
+
+        date = decoded['val']
+        datetime.datetime.strptime(date, '%Y-%m-%d')
+
+        if date != datetime.date.today().strftime('%Y-%m-%d'):
+            return return_json_response({'status': 400, 'message': 'Invalid token'}), 400
+
+    except jwt.exceptions.DecodeError as e:
+        return return_json_response({'status': 400, 'message': 'Invalid token'}), 400
+    except jwt.exceptions.InvalidSignatureError as e:
+        return return_json_response({'status': 400, 'message': 'Invalid token'}), 400
+
+    return return_json_response({'status': 200, 'message': 'Ok', 'data': decoded})
 
 @application.route('/tick_info')
 def getTickInfo():

@@ -30,6 +30,10 @@ tick_length = os.getenv("TICK_LENGTH", 2*60*1000)
 start_date = os.getenv("TICK_START", "2018-06-27T13:00+02:00")
 mongo_host = os.getenv("TULIP_MONGO", "localhost:27017")
 mongo_server = f'mongodb://{mongo_host}/'
+jwt_public_key = os.getenv("JWT_PUBLIC_KEY", "")
+if not jwt_public_key.startswith("-----BEGIN PUBLIC KEY-----"):
+    jwt_public_key = f'-----BEGIN PUBLIC KEY-----\n{jwt_public_key}\n-----END PUBLIC KEY-----\n'
+
 vm_ip = "192.168.1.41"
 
 services = [{"ip": vm_ip, "port": 3000, "name": "test_service"},
